@@ -1,0 +1,254 @@
+
+\documentclass[12pt]{amsart}
+
+\usepackage{amsfonts,amsmath}
+
+\usepackage{amsthm}
+
+\usepackage{amssymb}
+
+  \textheight=8in \textwidth=5.5in \topmargin=0in \oddsidemargin=0.5in
+  \renewcommand{\baselinestretch}{1.5}
+
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{question}[theorem]{Problem}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{definition}
+%\newtheorem*{definition}{Definition}
+\begin{document}
+
+
+
+\title{On BZS Completely 0-Simple Semigroups}
+\author{Omar E. Essa}
+\address {Department of Mathematics and Computer Science, Loyola University New Orleans, N. O., LA. 70118}
+\author {Mark Farag}
+\address {Department of Mathematics, Fairleigh Dickinson University, Teaneck, N. J., 07666}
+\author {Scott McDermott}
+\address {Department of Mathematics and Computer Science, Loyola University New Orleans, N. O., LA. 70118}
+\author {Ralph P. Tucci}
+\address {Department of Mathematics and Computer Science, Loyola University New Orleans, N. O., LA. 70118}
+\maketitle
+
+
+
+\noindent \textbf {Abstract}
+Following the work of~\cite{who}, we investigate a class of semigroups whose elements are either idempotent or nilpotent of index 2. These semigroups are known as \emph {Boolean Zero-Square} semigroups, or \emph {BZS} semigroups. In particular, we present a method to count the number of idempotents and nilpotents in any completely 0-simple semigroup, or $C0S$ semigroup. We developed a program in C++ to generate \emph {BZS} $C0S$ semigroups.
+
+%***********************8
+
+\section {Introduction} \label {I:intro}
+
+A \emph {semigroup} $S$ is a set with a single binary associative operation. An \emph {ideal} $I$ in a semigroup $S$ is a subset of $S$ which is is closed under multiplication by elements of $S$; that is, if $s \in S$ and $i \in I$, then $si \in S$ and $is \in S$. We denote these conditions by writing $sI \subseteq I$ and $Is \subseteq I$. A semigroup $S$ which contains a zero element 0 is \emph {0-simple} if $S$ and 0 are the only ideals in $S$. 
+
+An element $e \in S$ is \emph{idempotent} if if $e^2 = e$. Let $E$ denote the set of idempotents in $E$. We can define a partial order on $E$ as follows: if $e, f \in S$, then $e \leq f$ iff $e = ef = fe$. This partial order is \emph{trivial} if $e \leq f$ implies $e = f$.
+
+A semigroup is \emph {completely 0-simple} if $S$ is 0-simple and the partial order on $E$ is trivial. Such semigroups have been characterized by the following theorem, known as the \emph {Rees Representation Theorem}. 
+
+%***********************8
+
+\begin {theorem} \cite {cap, how}
+\emph {Let $I, \Lambda$ be two sets. Let $S$ be the set of all $I \times \Lambda$ matrices with at most one non-zero element from a group $G$, together with the zero matrix. A non-zero matrix is denoted $(i, g, \lambda)$ while the matrix consisting entirely of zeros is denoted 0. } 
+
+\emph {Let $P$ be a $\Lambda \times I$ matrix with at least one entry from $G$ in each row and column and zeros elsewhere. The matrix $P$ is referred to as the \emph {sandwich matrix}. Define multiplication * on $S$ as follows: if $(i, g, \lambda), (j, h, \mu) \in S$ then $$(i, g, \lambda) * (j, h, \mu) =  (i, g, \lambda) (\lambda, k, j) (j, h, \mu)$$ This product is $(i, gkh, \mu)$ if $k \neq 0$ and 0 otherwise. Then $S$ is a $C0S$ semigroup. Conversely, any $C0S$ semigroup can be represented by such a set of matrices.   }
+\end {theorem}
+
+%***********************8
+
+A semigroup $S$ is \emph {Boolean Zero Square} or \emph {BZS} if every element $s \in S$ satisfies either $s^2 = s$ or $s^2 = 0$. Semigroups and rings with these properties are studied in~\cite{ft1, ft2, ft3, who}. In this paper we characterize those $C0S$ semigroups which are \emph {BZS}. 
+
+In this paper we focus on $C0S$ semigroup whose entries are either 0 or 1. In Section 2 we present the main results of this paper. In Section 3 we give examples of our results. Finally, in Section 4 we present the pseudo-code for the computer program which we wrote that generates \emph {BZS} $C0S$ semigroups and serves to verify our results. We also provide a link to the actual program.
+
+%**********************
+
+\section {Main Results}
+
+\noindent \textbf {Notation} We investigate $C0S$ semigroups whose matrices have entries from $\{0,1\}$. If $A = (i, 1, \lambda)$,  we denote $A$ as $E_{i, \lambda}$. The set of idempotents in $S$ is denoted by $E$, and the set of nilpotents in $S$ is denoted by $N$. The cardinality of these sets is denoted by $\vert E \vert$ and $\vert N \vert$.
+
+%************************************
+
+\begin {lemma} \label {L:main}
+\emph{The matrix $E_{i, \lambda}$ is nilpotent if and only if the $(\lambda, i)$ entry in $P$ is 0. \\The matrix $E_{i, \lambda}$ is idempotent if and only if the $(\lambda, i)$ entry in $P$ is 1. }
+\end {lemma}
+
+\begin {proof}
+$E_{i, \lambda} * E_{i, \lambda} = E_{i, \lambda}PE_{i, \lambda} =E_{i, \lambda}E_{\lambda, i}E_{i, \lambda} $. This element is zero iff the $(\lambda, i)$ entry in $P$ is zero, and this element is 1 iff the $(\lambda, i)$ entry in $P$ is 1.
+\end {proof}
+
+%************************************
+
+
+\begin {theorem} \label{T:c0s}
+\emph {If $S$ is a $C0S$ semigroup, then $S$ is \emph {BZS} iff the entries in $S$ and the sandwich matrix $P$ are from $\{0, 1\}$. }
+\end {theorem}
+
+\begin {proof}
+$(\Rightarrow)$ By contrapositive. Let $(i, g, \lambda) \in S$ where $g \neq 0$ and $g \neq 1$. Let the $(\lambda, i)$ entry in $P$ be $h$ where $h \neq 0$ and $h \neq g^{-1}$. Then $(i, g, \lambda) * (i, g, \lambda) = (i, g, \lambda)(\lambda, h, i)  (i, g, \lambda)= (i, ghg, \lambda)$ and $ghg \neq g$ and $ghg \neq 0$.\\
+$(\Leftarrow)$ This follows from Lemma~\ref{L:main}.
+\end {proof}
+
+%*******************
+
+\begin {theorem} \label{T:idnil} 
+\emph {Let $S$ be a $C0S$ semigroup over $\{0, 1\}$. Then}
+\begin {enumerate}
+\item \emph {every element of $N$ is nilpotent of index 2;} \label {BBB}
+\item \emph {$\vert E \vert$ equals the number of $1's$ in $P$;}
+\item \emph {$\vert N \vert$ equals the number of $0's$ in $P$.}
+\end {enumerate}
+\emph {Moreover, the matrix $A = E_{i, \lambda}$ is idempotent iff the the $(\lambda, 1)$ entry in $P$ is 1; otherwise, $A^2 = 0$. }
+\end {theorem}
+
+\begin {proof}
+This follows from Lemma~\ref{L:main} and Theorem~\ref{T:c0s}.
+\end {proof}
+
+%************************************
+
+
+%******************************
+
+\begin {corollary}
+$ max \{\vert I \vert,  \vert \Lambda \vert \} \leq \vert E \vert \leq \vert I \vert \vert \Lambda \vert$
+\end {corollary}
+
+\begin {proof}
+If every element of $P$ is 1, then $P$ contains $\vert I\vert \vert \Lambda \vert$ 1's. Hence $\vert E \vert \leq \vert I \vert \vert \Lambda \vert$ by Theorem~\ref{T:idnil}(2). 
+
+The minimal value of $\vert E \vert$ equals the minimal number of 1's in $P$ by Theorem~\ref{T:idnil}. Recall that each element of $P$ has a least one 1 in each row and column. Therefore, to find the minimal value of $\vert E\vert $ we need to count the minimal number of 1's in any sandwich matrix $P$. Take as matrix $P$ the matrix with elements in positions $(1, 1), (2, 2), \ldots, (\vert I \vert, \vert I \vert)$. There are three cases to consider. 
+
+If $\vert I \vert = \vert \Lambda \vert$, then this matrix has $\vert I \vert = \vert \Lambda \vert $ 1's, and there is a single 1 in each row and column. Any other matrix with $\vert I \vert = \vert \Lambda \vert $ can have fewer 1's. Hence $\vert E \vert = \vert I \vert =\vert \Lambda \vert$. 
+
+If $\vert I \vert > \vert \Lambda\vert$, then we can arbitrarily put a single 1 anywhere in each of the remaining rows. In this case $\vert E \vert = \vert I \vert$. 
+
+If $\vert I \vert < \vert \Lambda \vert$ then we can arbitrarily put a single 1 in each of the remaining columns. In this case $\vert E \vert = \vert \Lambda \vert$. 
+\end {proof}
+
+We generalize the previous result to arbitrary $C0S$ semigroups. The proof is virtually identical to that of Theorem~\ref{T:idnil}. 
+
+\begin {theorem}
+\emph {Let $S$ be a $C0S$ semigroup over $G \cup 0$ for an arbitrary group $G$. Then}
+\begin {enumerate}
+\item \emph {$\vert E \vert$ equals the number of nonzero entries in $P$;}
+\item \emph {if $k$ is the number of $0's$ in $P$, then $\vert N \vert = \vert G \vert k$.}
+\end {enumerate}
+\emph {Moreover, the matrix $(i, g, \lambda)$ is idempotent iff the $(\lambda, i)$ entry of $P$ is $g^{-1}$, and $(i, g, \lambda)$ is nilpotent of index 2 iff the $(\lambda, i)$ entry of $P$ is 0. }
+\end {theorem}
+
+%************************************
+%***************
+
+
+\section {Examples}
+
+In this section we provide examples of the semigroups in the previous section. 
+
+\begin {example} \label{E:Id}
+\emph{Let $S$ be the set of all $2 \times 2$ matrices over $\{0, 1\} $ with at most one nonzero entry, and let the sandwich matrix $P$ be the identity matrix, $P= \begin {bmatrix} 1 &0 \\0 &1 \end {bmatrix}$. Then $S = \{E_{1,1}, E_{1,2}, E_{2,1}, E_{2,2}\} \cup \{0\}$. Denote these matrices by $A, B, C, D$ respectively. The semigroup $S$ is given in the following table. }
+
+\begin {center}
+\begin {tabular} {c| c c c c c }
+$\ $ &0&A &B &C &D\\
+\hline
+0 &0 &0 &0 &0 &0\\
+A &0 &A &B &0 &0\\
+B &0 &0 &0 &A &B\\
+C &0 &C &D\ &0 &0\\
+D &0 &0 &0 &C &D
+\end {tabular}
+\end {center}
+
+\noindent \emph{The sandwich matrix has two 0's and two 1's. As from Theorem~\ref{T:idnil} we have two idempotents where $E = \{A, D\}$, and two nilpotents where $N = \{B, C\}$}.
+
+\end {example}
+
+%************************************
+
+\begin {example}
+
+\emph{Let $S$ be as in Example~\ref{E:Id} and let $P= \begin {bmatrix} 0 &1 \\1 &1 \end {bmatrix}$. The semigroup $S$ is given in the following table.}
+
+\begin {center}
+\begin {tabular} {c| c c c c c}
+$\ $ &0 &A &B &C &D\\
+\hline
+0 &0 &0 &0 &0 &0\\
+A &0 &0 &0 &A &B\\
+B &0 &A &B &A &B\\
+C &0 &0 &0\ &C &D\\
+D &0 &C &D &C &D
+\end {tabular}
+\end {center}
+
+\noindent \emph{The sandwich matrix has one 0 and three 1's. As from Theorem~\ref{T:idnil} we have three idempotents where $E = \{B, C, D\}$, and one nilpotent where $N = \{A\}$}.
+\end {example}
+
+%************************************
+
+\begin {example}
+	\emph{Let $S$ be the set of all $2 \times 3$ matrices over $\{0, 1\} $ with at most one nonzero entry, and let $P = \begin {bmatrix} 1 &1 \\1 &0\\0 &1  \end {bmatrix}$. Then $S = \{E_{1,1}, E_{1,2}, E_{1, 3}, E_{2,1}, E_{2,2}, E_{2,3}\} \cup \{0\}$.  Denote these matrices by $A, B, C, D, E,  F$ respectively. The multiplication table is  }
+
+
+\begin {center}
+\begin {tabular} {c| c c c c c c c}
+$\ $ &0 &A &B &C &D &E &F\\
+\hline
+0 &0 &0 &0 &0 &0 &0 &0  \\
+A &0 &A &B &C &A &B &C\\
+B &0 &A &B &C &0 &0 &0\\
+C &0 &0 &0\ &0 &A &B &C\\
+D &0 &D &E &F &D &E &F\\
+E &0 &D &E &F &0 &0 &0\\
+F &0 &D &E &F &D &E &F
+\end {tabular}
+\end {center}
+
+
+\noindent \emph{The sandwich matrix has two 0's and four 1's. As from Theorem~\ref{T:idnil} we have four idempotents where $E = \{A, B, D, F\}$, and two nilpotents where $N = \{C, E\}$}.
+\end {example}
+%************************************
+
+\section {Pseudo-code}
+
+Here we present pseudo-code for the program which we used to check our results. The program can be found at \textbf {include a link to the program}.
+
+\textbf {Add pseudo-code here}
+
+%************************************
+
+\begin {thebibliography} {99}
+\bibitem {cap} Clifford, A. H. and G. B. Preston, \emph{The Algebraic Theory of Semigroups}, American Mathematical Society, New York, 1961.
+
+\bibitem {ft1}
+Farag, Mark, and Ralph P. Tucci, BZS Rings, Palestine Journal of Mathematics, Vol. 8(2) (2019), 8 – 14.
+
+\bibitem {ft2}
+Farag, Mark, and Ralph P. Tucci, BZS Rings II, Journal of Algebra and Related Topics, Vol. 9, No 2, (2021), pp 29-37.
+
+\bibitem {ft3}
+Farag, Mark, and Ralph P. Tucci, BN Rings, submitted. 
+
+
+\bibitem {how}
+Howie, J. M., \emph{Fundamentals of semigroup theory},  London Mathematical Society Monographs No. 12, Clarendon Press, Oxford, 1995.
+
+\bibitem {who}
+Pinto, G. A., Boolean Square Zero (BZS) Semigroups, SQU Journal for Science, 2021, 26(1), 31 - 39.
+
+\end {thebibliography}
+
+
+
+%**********************
+
+
+\end{document}
+
+

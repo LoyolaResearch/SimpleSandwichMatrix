@@ -160,7 +160,7 @@ int main()
 			}
 		}
 
-		// if the matrix is valid, add it to sandwichMatrix (not sure if implemented properly)
+		// if the matrix is valid, add it to sandwichMatrix
 		if (isValid)
 		{
 			for (j = 0; j < leftY * leftX; j++)
@@ -173,10 +173,10 @@ int main()
 
 	for (i = 1; i < count; i *= 2)
 	{
-		bignumint num = i;
+		bignumint num2 = i;
 		for (j = 0; j < leftX * leftY; j++)
 		{
-			if (num % 2 == 0)
+			if (num2 % 2 == 0)
 			{
 				left[usedLeftCount][j] = '0'; // place the 0s where num has no remainder
 				right[usedRightCount][j] = '0'; // place the 0s where num has no remainder
@@ -186,7 +186,7 @@ int main()
 				left[usedLeftCount][j] = '1'; // place the 1s where num has a remainder
 				right[usedRightCount][j] = '1'; // place the 1s where num has a remainder
 			}
-			num /= 2;
+			num2 /= 2;
 		}
 		usedLeftCount++;
 		usedRightCount++;
@@ -243,10 +243,11 @@ int main()
 	outputSummary.seekp(0, ios::end); // go to the end of the file
 	if (outputSummary.tellp() == 0) // check if the position at the end of the file is 0, which would mean it is still at the beginning and therefore empty
 	{
-		outputSummary << "First Dimension" << "," << "Second Dimension" << "," << "Regular Zero Count" << "," << "Nilpotent Count" << "," << "Idempotent Count" << "," << "Total Zero and Idempotent Count" << "," << "Time of Output" << endl;
+		outputSummary << "First Dimension" << "," << "Second Dimension" << "," << "Regular Zero Count" << "," << "Nilpotent Count" << "," << "Idempotent Count" << "," << "Center Count" << "," << "LeftCount" << "," << "Right Count" << "," << "Total Zero and Idempotent Count" << "," << "Time of Output" << endl;
+//		outputSummary << "First Dimension" << "," << "Second Dimension" << "," << "Regular Zero Count" << "," << "Nilpotent Count" << "," << "Idempotent Count" << "," << "Total Zero and Idempotent Count" << "," << "Time of Output" << endl;
 	}
 	// print the counts of each type of result
-	outputSummary << leftX << "," << leftY << "," << countRegularZero << "," << countNilPotent << "," << countIdemPotent << "," << countTotalZeroAndIdem << "," << currentDateAndTime << endl;
+	outputSummary << leftX << "," << leftY << "," << countRegularZero << "," << countNilPotent << "," << countIdemPotent << "," << usedCenterCount << "," << usedLeftCount << "," << usedRightCount << "," << countTotalZeroAndIdem << "," << currentDateAndTime << endl;
 
 	// memory cleanup
 	delete[] left;

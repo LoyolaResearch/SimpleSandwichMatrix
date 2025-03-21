@@ -18,9 +18,6 @@
     <ClCompile Include="zdgsets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="oldCode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zdgsets.h">
@@ -29,25 +26,5 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="pseudoCode.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="2x3.csv">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="3x2.csv">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="3x3.csv">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="3x4.csv">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="4x3.csv">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="summary.csv">
-      <Filter>Source Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

@@ -27,6 +27,7 @@ datatype** newRight = NULL;
 datatype** firstProduct = NULL;
 datatype** finalProduct = NULL;
 datatype* finalProduct1D = NULL;
+bool skipFileOut;
 
 int main()
 {
@@ -63,7 +64,7 @@ int main()
 
 	// this allows us to have a choice between printing the matrices in the console or in a file
 	char outputDestination;
-	cout << "Would you like to output your sandwich matrices to the console or a file (c/f): ";
+	cout << "Would you like to output your sandwich matrices to the console or a file or skip (c/f/s): ";
 	cin >> outputDestination;
 	bool outputToFile;
 
@@ -71,7 +72,7 @@ int main()
 	{
 		outputToFile = false;
 	}
-	else if (outputDestination == 'f')
+	else if (outputDestination == 'f' || outputDestination == 's')
 	{
 		outputToFile = true;
 	}
@@ -81,8 +82,8 @@ int main()
 		return 0;
 	}
 
-	string filename = "";
-	if (outputToFile)
+	string filename = "empty.csv";
+	if (outputToFile && outputDestination != 's')
 	{
 		cout << "Please enter a filename in the current directory for the outer and sandwich matrices: ";
 		cin.ignore();
@@ -92,7 +93,8 @@ int main()
 	// create two files for matrix and summary output
 	ostream& output = (outputToFile) ? (*(new ofstream(filename))) : (cout);
 	ostream& outputSummary = (outputToFile) ? (*(new ofstream("summary.csv", std::ios::app))) : (cout);
-
+	//if (outputDestination == 's') output.rdbuf(0);//std::ostream out(0);//	
+	skipFileOut = outputDestination == 's';
 
 	for (i = 0; i < count; i++)
 	{
@@ -222,7 +224,8 @@ int main()
 	bignumint countIdemPotent = 0;
 	bignumint countTotalZeroAndIdem = 0;
 
-	output << "Left," << "Center," << "Right," << "Product," << "Group" << " (" << leftX << "x" << leftY << ")" << endl; // print a header for csv file
+	if (!skipFileOut)
+		output << "Left," << "Center," << "Right," << "Product," << "Group" << " (" << leftX << "x" << leftY << ")" << endl; // print a header for csv file
 	initializeArrays(leftX, leftY); // initialize matrices as 2d instead of 1d
 	for (j = 0; j < usedCenterCount; j++) // iterate through all center matrix possibilities
 	{
@@ -247,7 +250,7 @@ int main()
 //		outputSummary << "First Dimension" << "," << "Second Dimension" << "," << "Regular Zero Count" << "," << "Nilpotent Count" << "," << "Idempotent Count" << "," << "Total Zero and Idempotent Count" << "," << "Time of Output" << endl;
 	}
 	// print the counts of each type of result
-	outputSummary << leftX << "," << leftY << "," << countRegularZero << "," << countNilPotent << "," << countIdemPotent << "," << usedCenterCount << "," << usedLeftCount << "," << usedRightCount << "," << countTotalZeroAndIdem << "," << currentDateAndTime << endl;
+	outputSummary << leftX << "," << leftY << "," << countRegularZero << "," << countNilPotent << "," << countIdemPotent << "," << usedCenterCount << "," << usedLeftCount << "," << usedRightCount << "," << countTotalZeroAndIdem << "," << currentDateAndTime;
 
 	// memory cleanup
 	delete[] left;
@@ -488,21 +491,27 @@ bool multiplyMatrices(datatype* left, int leftX, int leftY, datatype* center, da
 		
 		if (isNilPotent) // if they are nilpotents
 		{
-			printMatrix1D(left, leftX, leftY, output);
-			printMatrix1D(center, leftY, leftX, output);
-			printMatrix1D(right, leftX, leftY, output);
-			printMatrix1D(finalProduct1D, leftX, leftY, output);
-			output << "Nilpotent" << endl;
+			if (!skipFileOut)
+			{
+				printMatrix1D(left, leftX, leftY, output);
+				printMatrix1D(center, leftY, leftX, output);
+				printMatrix1D(right, leftX, leftY, output);
+				printMatrix1D(finalProduct1D, leftX, leftY, output);
+				output << "Nilpotent" << endl;
+			}
 			countNilPotent++; // increment the count of nilpotents which is initialized outside the function and passed as a reference parameter
 			countTotalZeroAndIdem++; // increment the total count of zero divisors 
 		}
 		else // if they are regular zero divisors
 		{
-			printMatrix1D(left, leftX, leftY, output);
-			printMatrix1D(center, leftY, leftX, output);
-			printMatrix1D(right, leftX, leftY, output);
-			printMatrix1D(finalProduct1D, leftX, leftY, output);
-			output << "Regular Zero Divisor" << endl;
+			if (!skipFileOut)
+			{
+				printMatrix1D(left, leftX, leftY, output);
+				printMatrix1D(center, leftY, leftX, output);
+				printMatrix1D(right, leftX, leftY, output);
+				printMatrix1D(finalProduct1D, leftX, leftY, output);
+				output << "Regular Zero Divisor" << endl;
+			}
 			countRegularZero++; // increment the count of regular zero divisors which is initialized outside the function and passed as a reference parameter
 			countTotalZeroAndIdem++;
 		}
@@ -511,11 +520,14 @@ bool multiplyMatrices(datatype* left, int leftX, int leftY, datatype* center, da
 	{
 		if (isIdemPotent) // if they are idempotents
 		{
-			printMatrix1D(left, leftX, leftY, output);
-			printMatrix1D(center, leftY, leftX, output);
-			printMatrix1D(right, leftX, leftY, output);
-			printMatrix1D(finalProduct1D, leftX, leftY, output);
-			output << "Idempotent" << endl;
+			if (!skipFileOut)
+			{
+				printMatrix1D(left, leftX, leftY, output);
+				printMatrix1D(center, leftY, leftX, output);
+				printMatrix1D(right, leftX, leftY, output);
+				printMatrix1D(finalProduct1D, leftX, leftY, output);
+				output << "Idempotent" << endl;
+			}
 			countIdemPotent++; // increment the count of idempotents which is initialized outside the function and passed as a reference parameter
 			countTotalZeroAndIdem++;
 		}
